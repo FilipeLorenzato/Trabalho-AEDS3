@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gerenciar Tags</title>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; background-color: #f8f9fa; }
+        .container { max-width: 700px; margin: 0 auto; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; }
+        .info-boleto { background: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        
+        .form-add { display: flex; gap: 10px; margin-bottom: 20px; padding: 15px; background: #e7f1ff; border-radius: 5px; }
+        select { flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+        button { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; color: white; }
+        .btn-add { background-color: #28a745; }
+        .btn-del { background-color: #dc3545; font-size: 0.8rem; }
+        
+        ul { list-style: none; padding: 0; }
+        li { background: white; border-bottom: 1px solid #eee; padding: 10px; display: flex; justify-content: space-between; align-items: center; }
+        li:last-child { border-bottom: none; }
+        
+        .tag-badge { background: #ffc107; padding: 4px 8px; border-radius: 12px; font-weight: bold; font-size: 0.9rem; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/boletos" style="text-decoration: none; color: #666;">⬅ Voltar para Boletos</a>
+        <h2>Gerenciar Tags do Boleto</h2>
+
+        <div class="info-boleto">
+            <strong>Boleto:</strong> <span th:text="${boleto.descricao}"></span><br>
+            <strong>Valor:</strong> R$ <span th:text="${boleto.valor}"></span>
+        </div>
+
+        <form action="/boleto/adicionar-tag" method="post" class="form-add">
+            <input type="hidden" name="idBoleto" th:value="${boleto.id}">
+            
+            <select name="idTag" required>
+                <option value="" disabled selected>Escolha uma tag para adicionar...</option>
+                <option th:each="tag : ${todasTags}" 
+                        th:value="${tag.id}" 
+                        th:text="${tag.nome}"></option>
+            </select>
+            <button type="submit" class="btn-add">＋ Vincular</button>
+        </form>
+
+        <h3>Tags Associadas:</h3>
+        <ul>
+            <li th:each="tag : ${tagsAtuais}">
+                <span class="tag-badge" th:text="${tag.nome}">Urgente</span>
+                
+                <form action="/boleto/remover-tag" method="post" style="margin:0;">
+                    <input type="hidden" name="idBoleto" th:value="${boleto.id}">
+                    <input type="hidden" name="idTag" th:value="${tag.id}">
+                    <button type="submit" class="btn-del">Remover</button>
+                </form>
+            </li>
+            <li th:if="${#lists.isEmpty(tagsAtuais)}" style="color: #999; justify-content: center;">
+                Nenhuma tag vinculada.
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Clientes</title>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; background: #f8f9fa; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #f1f1f1; }
+        .btn { padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; display: inline-block; }
+        .btn-voltar { color: #666; text-decoration: none; margin-right: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/home" class="btn-voltar">⬅ Voltar</a>
+        <a href="/novo-cliente" class="btn">＋ Novo Cliente</a>
+        <h1>Lista de Clientes</h1>
+        <table>
+            <thead><tr><th>ID</th><th>Nome</th><th>CPF</th><th>Salário</th></tr></thead>
+            <tbody>
+                <tr th:each="c : ${clientes}">
+                    <td th:text="${c.id}"></td>
+                    <td th:text="${c.nome}"></td>
+                    <td th:text="${c.CPF}"></td>
+                    <td th:text="${c.salario}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
