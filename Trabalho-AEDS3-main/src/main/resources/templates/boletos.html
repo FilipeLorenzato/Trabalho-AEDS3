@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Boletos - AEDS III</title>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; background-color: #f8f9fa; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        h1 { color: #2c3e50; text-align: center; }
+        
+        .search-box { margin-bottom: 20px; display: flex; gap: 10px; }
+        
+        /* Estilos do formulário */
+        input { flex: 2; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        select { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: white; }
+        button { padding: 10px 20px; background: #1877f2; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #166fe5; }
+        
+        .btn-voltar { display: inline-block; margin-bottom: 20px; color: #666; text-decoration: none; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background-color: #f8f9fa; color: #333; }
+        tr:hover { background-color: #f1f1f1; }
+        .tag { background: #e1ecf4; color: #39739d; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <a href="/home" class="btn-voltar">⬅ Voltar ao Menu</a>
+            <a href="/novo-boleto" style="padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 4px; margin-left: 10px;">＋ Novo Boleto</a>
+        </div>
+
+        <h1>Gerenciamento de Boletos</h1>
+
+        <form action="/boletos" method="get" class="search-box">
+            
+            <input type="text" name="busca" th:value="${termoBusca}" placeholder="Digite o padrão para pesquisar na descrição...">
+            
+            <select name="algoritmo">
+                <option value="KMP" th:selected="${algoritmoSelecionado == 'KMP'}">Algoritmo KMP</option>
+                <option value="BM" th:selected="${algoritmoSelecionado == 'BM'}">Boyer-Moore</option>
+            </select>
+
+            <button type="submit">Buscar</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Vencimento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="boleto : ${boletos}">
+                    <td th:text="${boleto.id}">1</td>
+                    <td th:text="${boleto.descricao}">Descricao</td>
+                    <td th:text="'R$ ' + ${boleto.valor}">R$ 0,00</td>
+                    <td th:text="${boleto.dataVencimento}">01/01/2025</td>
+                    <td>
+                        <a th:href="@{/boleto/tags(id=${boleto.id})}" style="background:#ffc107; color:black; text-decoration:none; padding:5px 10px; border-radius:4px; font-size:0.9rem;">🏷️ Tags</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(boletos)}">
+                    <td colspan="5" style="text-align: center; color: #999;">Nenhum boleto encontrado.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
